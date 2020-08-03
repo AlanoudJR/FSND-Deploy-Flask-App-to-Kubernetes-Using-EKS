@@ -1,6 +1,32 @@
 """
 A simple app to create a JWT token.
+   export TOKEN=`curl -d '{"email":"anoud-0@hotmail.com","password":"xyzxyz"}' -H "Content-Type: application/json" -X POST localhost:8080/auth  | jq -r '.token'`
+   export TOKEN=`curl -d '{"email":"anoud-0@hotmail.com","password":"xyzxyz"}' -H "Content-Type: application/json" -X POST localhost:80/auth  | jq -r '.token'`
+
+export TOKEN=`curl -d '{"email":"anoud-0@hotmail.com","password":"xyzxyz"}' -H "Content-Type: application/json" -X POST localhost:80/auth  | jq -r '.token'`
+
+FROM python:stretch
+WORKDIR /FSND-Deploy-Flask-App-to-Kubernetes-Using-EKS
+ENV FLASK_APP main.py
+ENV FLASK_RUN_HOST 0.0.0.0
+RUN pip install -r requirements.txt
+ENTRYPOINT ["gunicorn", "-b", ":8080", "main:APP"]
+
+
+FROM python:3.7.2-slim
+
+COPY . /app
+WORKDIR /app
+
+RUN pip install --upgrade pip
+RUN pip install flask
+
+
+ENTRYPOINT ["python", "app.py"]
+
+
 """
+
 import os
 import logging
 import datetime
